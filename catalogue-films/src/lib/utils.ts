@@ -74,6 +74,21 @@ export function trierPar(liste: film[], cle: keyof(film)): film[]  { //prends cl
   return [...liste].sort((a, b) => (a[cle] > b[cle] ? 1 : -1));
 }
 
+function TrierPar<T>(liste: T[], cle: keyof T): T[] {
+  return [...liste].sort((a, b) => {
+    if (a[cle] < b[cle]) return -1;
+    if (a[cle] > b[cle]) return 1;
+    return 0;
+  });
+}
+
+// R de mozilla fiche sur .sort(): 
+// Elle doit retourner un nombre où :
+
+// Une valeur négative indique que a doit précéder b.
+// Une valeur positive indique que a doit suivre b.
+// Zéro ou NaN indique que a et b sont considérés comme égaux.
+
 // --- 5. Un paramètre optionnel jamais vérifié -------------------------
 // Appelée sans genre, cette fonction filtre sur `undefined`.
 
