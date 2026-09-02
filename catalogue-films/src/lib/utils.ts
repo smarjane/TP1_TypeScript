@@ -13,7 +13,18 @@
 
 // --- Données de démonstration ----------------------------------------
 
-export const FILMS = [
+type statut = "vu" | "a_voir" | "abandonne" //pr conditionner le code
+type genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure" //revoir a quoi sa sert deja
+
+interface film{
+  id: number;
+  titre: string;
+  annee: number;
+  genres: genre[]
+  note: number;
+  statut: statut
+}
+export const FILMS: film[]= [ //modele d'un objet en gros si on enelve une propriété ou il en manque une sa devient rouge
   { id: 1, titre: "Alien", annee: 1979, genres: ["SF", "Horreur"], note: 8.5, statut: "vu" },
   { id: 2, titre: "Blade Runner", annee: 1982, genres: ["SF", "Thriller"], note: 8.1, statut: "vu" },
   { id: 3, titre: "Arrival", annee: 2016, genres: ["SF", "Drame"], note: 7.9, statut: "a_voir" },
@@ -24,11 +35,12 @@ export const FILMS = [
 // --- 1. Paramètres non typés -----------------------------------------
 // Le mode strict interdit les paramètres au type implicite.
 
-export function formaterTitre(titre, annee) {
+
+export function formaterTitre(titre: string, annee: number) : string { //on les rends explicite en mettant leur type
   return `${titre} (${annee})`;
 }
 
-export function resume(film) {
+export function resume(film: film) : string { //typer le retour qui est une chaine de caractere en entier
   return `${film.titre} — ${film.annee} — ${film.note}/10 — ${film.genres.join(", ")}`;
 }
 
@@ -36,7 +48,7 @@ export function resume(film) {
 // Cette fonction renvoie tantôt un nombre, tantôt une chaîne.
 // Quel type déclarer ? Et surtout : que devra faire celui qui l'appelle ?
 
-export function moyenne(notes) {
+export function moyenne(notes: number[]) : number | string { //car tabl grace deja a indice length et on return soit nbr sois rien du coup 
   if (notes.length === 0) return "Aucune note";
   const total = notes.reduce((a, b) => a + b, 0);
   return total / notes.length;
@@ -46,28 +58,35 @@ export function moyenne(notes) {
 // find() renvoie undefined quand rien ne correspond.
 // La deuxième fonction l'ignore complètement.
 
-export function trouverParId(liste, id) {
+export function trouverParId(liste: film[], id: number) : film | undefined { //nom de la propriété de la méthode
   return liste.find((film) => film.id === id);
-}
+} // pr chaque film quand film id = id return le film sinon return undefined
 
-export function titreDuFilm(liste, id) {
-  return trouverParId(liste, id).titre;
+export function titreDuFilm(liste: film[], id: number) : string | undefined { //string car c jsute le tittre
+  return trouverParId(liste, id)?.titre; //? sert a "si il est non null on va aller voir le titre"
 }
 
 // --- 4. Un tri générique ----------------------------------------------
 // On trie par une clé passée en paramètre. Rien ne garantit que cette
 // clé existe sur les objets de la liste.
 
-export function trierPar(liste, cle) {
+export function trierPar(liste: film[], cle: keyof(film)): film[]  { //prends clé de type film
   return [...liste].sort((a, b) => (a[cle] > b[cle] ? 1 : -1));
 }
 
 // --- 5. Un paramètre optionnel jamais vérifié -------------------------
 // Appelée sans genre, cette fonction filtre sur `undefined`.
 
-export function filtrerParGenre(liste, genre) {
-  return liste.filter((film) => film.genres.includes(genre));
+export function filtrerParGenre(liste: film[], genre?: genre) : film [] { //filtre donc que 1 1 seul genre et pr trie c tout les data donc on met le tableau
+  if( genre !== undefined){
+    return liste.filter((film) => film.genres.includes(genre));
+  }
+  return liste
 }
+
+filtrerParGenre(FILMS) //2  si on peut filtrer par genre et si on peut pas 
+filtrerParGenre(FILMS, "SF")
+
 
 // --- 6. Un statut libre ------------------------------------------------
 // `statut` est une chaîne quelconque : rien n'empêche d'écrire "Vu",
