@@ -116,6 +116,17 @@ type FilmAvecStatut = {
   statut: StatutFilm;
 };
 
+export function StatutDuFilm(s: StatutFilm) {
+  if(s === "vu"){
+    console.log("Vous avez déjà visionner ce film!");
+  }else if (s === "a_voir"){
+    console.log("il est dans la liste!");
+  }else{
+    console.log("vous avez abandonné le visionnage");
+  }
+}
+
+
 export function estVu(film: FilmAvecStatut): boolean {
   return film.statut === "vu";
 }
