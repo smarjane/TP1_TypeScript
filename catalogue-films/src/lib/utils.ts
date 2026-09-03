@@ -77,7 +77,7 @@ export function trierPar(liste : film[], cle: keyof(film)): film[] {
   return [...liste].sort((a, b) => (a[cle] > b[cle] ? 1 : -1));
 }
 
-function TrierPar<T>(liste: T[], cle: keyof T): T[] {
+export function TrierPar<T>(liste: T[], cle: keyof T): T[] { //R une func export n'est pas consid comme inutilisé
   return [...liste].sort((a, b) => {
     if (a[cle] < b[cle]) return -1;
     if (a[cle] > b[cle]) return 1;
@@ -112,24 +112,28 @@ filtrerParGenre(FILMS, "SF")
 
 type StatutFilm = "vu" | "a_voir" | "abandonne";
 
-type FilmAvecStatut = {
+export type FilmAvecStatut = {
+  titre: string;
   statut: StatutFilm;
 };
 
-export function StatutDuFilm(s: StatutFilm) {
-  if(s === "vu"){
-    console.log("Vous avez déjà visionner ce film!");
-  }else if (s === "a_voir"){
-    console.log("il est dans la liste!");
-  }else{
-    console.log("vous avez abandonné le visionnage");
-  }
-}
 
 
-export function estVu(film: FilmAvecStatut): boolean {
-  return film.statut === "vu";
-}
+// export function StatutDuFilm(s: StatutFilm) { //ps de type de retour car return r
+//   if(s === "vu"){
+//     console.log("Vous avez déjà visionner ce film!");
+//   }else if (s === "a_voir"){
+//     console.log("il est dans la liste!");
+//   }else{
+//     console.log("vous avez abandonné le visionnage");
+//   }
+// }
+
+
+
+// export function estVu(film: FilmAvecStatut): boolean {
+//   return film.statut === "vu";
+// }
 
 export function libelleStatut(film: FilmAvecStatut): string {
   if (film.statut === "vu") return "Déjà vu";

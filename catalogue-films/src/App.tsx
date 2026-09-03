@@ -3,11 +3,31 @@ import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
+import {type FilmAvecStatut} from './lib/utils.ts'//R acco car ps export edfault mais nommé
+
+export function FILMStatut({titre, statut} : FilmAvecStatut ){
+  return (
+    <div>
+      <h2>{titre}</h2>
+      <h3>{statut}</h3>
+    </div>
+  )
+}
+
+const films: FilmAvecStatut[] = [
+  { titre: "Game of thrones", statut: "vu" },
+  { titre: "Gossip girl", statut: "a_voir" },
+  { titre: "Vampire diares", statut: "abandonne" },
+];
+
+
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
+    
+    
     <>
       <section id="center">
         <div className="hero">
@@ -29,6 +49,10 @@ function App() {
           Count is {count}
         </button>
       </section>
+
+      {films.map((film) => (
+  <FILMStatut key={film.titre} titre={film.titre} statut={film.statut} />
+))}
 
       <div className="ticks"></div>
 
