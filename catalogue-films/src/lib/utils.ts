@@ -13,10 +13,10 @@
 
 // --- Données de démonstration ----------------------------------------
 
-type statut = "vu" | "a_voir" | "abandonne" //pr conditionner le code
-type genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure" //revoir a quoi sa sert deja
+export type statut = "vu" | "a_voir" | "abandonne" //pr conditionner le code
+export type genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure" //revoir a quoi sa sert deja
 
-interface film{
+export interface film{
   id: number;
   titre: string;
   annee: number;
