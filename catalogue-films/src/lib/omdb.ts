@@ -4,7 +4,7 @@ const [films, setFilms] = useState<FilmOmdb[]>([]);
 const [chargement, setChargement] = useState(false);
 const [erreur, setErreur] = useState<string | null>(null);
 
-export interface FilmOmdb {
+export interface FilmOmdb { 
   imdbID: string;
   Title: string;
   Year: string;
