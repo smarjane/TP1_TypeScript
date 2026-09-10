@@ -1,7 +1,7 @@
 /*import type path from "path";
 import {useEffect, useState} from "react";
 
-export interface FilmOmdb {
+export interface FilmOmdb { 
   imdbID: string;
   Title: string;
   Year: string;
