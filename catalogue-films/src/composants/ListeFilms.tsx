@@ -1,51 +1,51 @@
-import type { film, statut } from "../lib/utils";
-import Carte from "./Carte";
-import Badge from "./Badge";
+import type { Film, StatutFilm } from "../lib/utils";
+import Badge, { type TonBadge } from "./Badge";
 import Bouton from "./Bouton";
-import type { TonBadge } from "./Badge"; //type jamais inclu ds import donc on import ceux qu'on a besoin
+import Carte from "./Carte";
 
 export interface ListeFilmsProps {
-  films: film[];
+  films: Film[];
   messageVide?: string;
-  onSelection?: (film: film) => void;
+  onSelection?: (film: Film) => void;
 }
 
-const correspondanceStatut: Record<statut, { label: string; ton: TonBadge }> = {
-  vu: { label: "Déjà vu", ton: "succes" },
-  a_voir: { label: "À voir", ton: "info" },
-  abandonne: { label: "Abandonné", ton: "neutre" },
+const correspondanceStatut: Record<StatutFilm, { libelle: string; ton: TonBadge }> = {
+  vu: { libelle: "Déjà vu", ton: "succes" },
+  a_voir: { libelle: "À voir", ton: "info" },
+  abandonne: { libelle: "Abandonné", ton: "neutre" },
 };
 
 export default function ListeFilms({ films, messageVide, onSelection }: ListeFilmsProps) {
   if (films.length === 0) {
-    return <p>{messageVide}</p>;
+    return (
+      <div className="rounded-xl border border-dashed border-slate-300 bg-slate-100 p-6 text-center text-slate-600">
+        {messageVide ?? "Aucun film à afficher."}
+      </div>
+    );
   }
 
   return (
-    <ul className="grid">
+    <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {films.map((film) => {
         const statut = correspondanceStatut[film.statut];
 
         return (
-          <li key={film.id}>
+          <li key={film.id} className="list-none">
             <Carte
               titre={film.titre}
               sousTitre={`${film.annee} — ${film.note}/10`}
               actions={
                 onSelection ? (
-                <Bouton libelle="détails" onClick={() => onSelection(film)} />
+                  <Bouton libelle="Détails" onClick={() => onSelection(film)} />
                 ) : undefined
               }
             >
-          
-              <Badge ton={statut.ton}>{statut.label}</Badge>
-
-        
-              {film.genres.map((g) => (
-                <Badge key={g} ton="info">
-                  {g}
-                </Badge>
-              ))}
+              <div className="flex flex-wrap gap-2">
+                <Badge texte={statut.libelle} ton={statut.ton} />
+                {film.genres.map((genre) => (
+                  <Badge key={`${film.id}-${genre}`} texte={genre} ton="info" />
+                ))}
+              </div>
             </Carte>
           </li>
         );

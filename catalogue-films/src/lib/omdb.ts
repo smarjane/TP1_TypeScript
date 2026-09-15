@@ -1,20 +1,34 @@
-import { useState } from 'react';
-
-const [films, setFilms] = useState<FilmOmdb[]>([]);
-const [chargement, setChargement] = useState(false);
-const [erreur, setErreur] = useState<string | null>(null);
-
-export interface FilmOmdb { 
+export interface FilmOmdb {
   imdbID: string;
   Title: string;
   Year: string;
-  Type: string;      // "movie" | "series" | "game" — l'API n'est pas plus précise
-  Poster: string;    // une URL, ou la chaîne "N/A"
+  Type: string;
+  Poster: string;
 }
 
 export interface ReponseRecherche {
-  Search?: FilmOmdb[];       // absent quand la recherche échoue
+  Search?: FilmOmdb[];
   totalResults?: string;
   Response: "True" | "False";
   Error?: string;
+}
+
+export function creerExempleRecherche(): ReponseRecherche {
+  return {
+    Response: "True",
+    totalResults: "1",
+    Search: [
+      {
+        imdbID: "tt0083658",
+        Title: "Blade Runner",
+        Year: "1982",
+        Type: "movie",
+        Poster: "https://example.com/poster.jpg",
+      },
+    ],
+  };
+}
+
+export function estErreurRecherche(reponse: ReponseRecherche): boolean {
+  return reponse.Response === "False" || Boolean(reponse.Error);
 }

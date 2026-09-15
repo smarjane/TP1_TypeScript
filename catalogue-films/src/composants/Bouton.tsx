@@ -1,20 +1,13 @@
-// src/composants/Bouton.tsx
-
-import type React from "react";
-
 export type VarianteBouton = "primaire" | "secondaire" | "danger";
 export type TypeBouton = "button" | "submit";
-
 
 export interface BoutonProps {
   libelle: string;
   variante?: VarianteBouton;
   desactive?: boolean;
   onClick?: () => void;
-  type?: TypeBouton;   // "button" par défaut
-
+  type?: TypeBouton;
 }
-
 
 const base =
   "px-4 py-2 rounded-lg font-medium transition-colors " +
@@ -34,10 +27,11 @@ export default function Bouton({
   variante = "primaire",
   desactive = false,
   onClick,
+  type = "button",
 }: BoutonProps) {
   return (
     <button
-      type="button"
+      type={type}
       disabled={desactive}
       onClick={onClick}
       className={`${base} ${variantes[variante]}`}

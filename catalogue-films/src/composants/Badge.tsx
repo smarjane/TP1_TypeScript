@@ -1,10 +1,7 @@
-// src/composants/Badge.tsx
-
 export type TonBadge = "neutre" | "succes" | "info" | "attention";
 
 export interface BadgeProps {
-  //texte: string;
-  children: React.ReactNode;
+  texte: string;
   ton?: TonBadge;
 }
 
@@ -15,12 +12,12 @@ const tons: Record<TonBadge, string> = {
   attention: "bg-amber-100 text-amber-800",
 };
 
-export default function Badge({ children, ton = "neutre" }: BadgeProps) {
+export default function Badge({ texte, ton = "neutre" }: BadgeProps) {
   return (
     <span
       className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${tons[ton]}`}
     >
-      {children}
+      {texte}
     </span>
   );
 }

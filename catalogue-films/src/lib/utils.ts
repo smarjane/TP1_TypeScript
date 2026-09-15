@@ -1,32 +1,16 @@
-// =====================================================================
-//  utils.js — Catalogue de films
-//  TP1 — React.js & TypeScript
-//
-//  Ce module fonctionne parfaitement en JavaScript.
-//  Votre travail : le renommer en utils.ts et le faire passer en mode
-//  strict, sans utiliser `any`, jusqu'à ce que `npx tsc --noEmit` se
-//  taise complètement.
-//
-//  Traitez les erreurs UNE PAR UNE, dans l'ordre où le compilateur les
-//  donne. Chaque bloc numéroté ci-dessous cache un problème différent.
-// =====================================================================
+export type StatutFilm = "vu" | "a_voir" | "abandonne";
+export type GenreFilm = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure";
 
-// --- Données de démonstration ----------------------------------------
-
-export type statut = "vu" | "a_voir" | "abandonne" //pr conditionner le code
-export type genre = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure" //revoir a quoi sa sert deja
-
-export interface film{
+export interface Film {
   id: number;
   titre: string;
   annee: number;
-  genres: genre[]
+  genres: GenreFilm[];
   note: number;
-  statut: statut
+  statut: StatutFilm;
 }
 
-
-export const FILMS:film[]= [ //modele d'un objet en gros si on enelve une propriété ou il en manque une sa devient rouge
+export const FILMS: Film[] = [
   { id: 1, titre: "Alien", annee: 1979, genres: ["SF", "Horreur"], note: 8.5, statut: "vu" },
   { id: 2, titre: "Blade Runner", annee: 1982, genres: ["SF", "Thriller"], note: 8.1, statut: "vu" },
   { id: 3, titre: "Arrival", annee: 2016, genres: ["SF", "Drame"], note: 7.9, statut: "a_voir" },
@@ -34,149 +18,21 @@ export const FILMS:film[]= [ //modele d'un objet en gros si on enelve une propri
   { id: 5, titre: "Solaris", annee: 1972, genres: ["SF", "Drame"], note: 8.4, statut: "abandonne" },
 ];
 
-// --- 1. Paramètres non typés -----------------------------------------
-// Le mode strict interdit les paramètres au type implicite.
-
-
-export function formaterTitre(titre: string, annee: number): string {
-  return `${titre} (${annee})`;
-}
-
-export function resume(film: film): string{
-  return `${film.titre} — ${film.annee} — ${film.note}/10 — ${film.genres.join(", ")}`;
-}
-
-// --- 2. Un retour de type variable ------------------------------------
-// Cette fonction renvoie tantôt un nombre, tantôt une chaîne.
-// Quel type déclarer ? Et surtout : que devra faire celui qui l'appelle ?
-
-export function moyenne(notes: number[]): number | string {
-  if (notes.length === 0) return "Aucune note";
-  const total = notes.reduce((a, b) => a + b, 0);
-  return total / notes.length;
-}
-
-// --- 3. Une recherche qui peut échouer --------------------------------
-// find() renvoie undefined quand rien ne correspond.
-// La deuxième fonction l'ignore complètement.
-
-
-export function trouverParId(liste: film[], id: number): undefined | film {
-  return liste.find((film) => film.id === id);
-} // pr chaque film quand film id = id return le film sinon return undefined
-
-export function titreDuFilm(liste: film[], id: number): string | undefined {
-  return trouverParId(liste, id)?.titre;
-}
-
-// --- 4. Un tri générique ----------------------------------------------
-// On trie par une clé passée en paramètre. Rien ne garantit que cette
-// clé existe sur les objets de la liste.
-
-export function trierPar(liste : film[], cle: keyof(film)): film[] {
-  return [...liste].sort((a, b) => (a[cle] > b[cle] ? 1 : -1));
-}
-
-export function TrierPar<T>(liste: T[], cle: keyof T): T[] { //R une func export n'est pas consid comme inutilisé
+export function trierPar(liste: Film[], cle: keyof Film): Film[] {
   return [...liste].sort((a, b) => {
-    if (a[cle] < b[cle]) return -1;
-    if (a[cle] > b[cle]) return 1;
+    const valeurA = a[cle];
+    const valeurB = b[cle];
+
+    if (valeurA < valeurB) return -1;
+    if (valeurA > valeurB) return 1;
     return 0;
   });
 }
 
-// R de mozilla fiche sur .sort(): 
-// Elle doit retourner un nombre où :
-
-// Une valeur négative indique que a doit précéder b.
-// Une valeur positive indique que a doit suivre b.
-// Zéro ou NaN indique que a et b sont considérés comme égaux.
-
-// --- 5. Un paramètre optionnel jamais vérifié -------------------------
-// Appelée sans genre, cette fonction filtre sur `undefined`.
-
-export function filtrerParGenre(liste: film[], genre?: genre): film[] {
-  if (genre !== undefined) {
-    return liste.filter((film) => film.genres.includes(genre));
+export function filtrerParGenre(liste: Film[], genre?: GenreFilm): Film[] {
+  if (genre === undefined) {
+    return liste;
   }
-  return liste
-}
 
-filtrerParGenre(FILMS) //2  si on peut filtrer par genre et si on peut pas 
-filtrerParGenre(FILMS, "SF")
-
-
-// --- 6. Un statut libre ------------------------------------------------
-// `statut` est une chaîne quelconque : rien n'empêche d'écrire "Vu",
-// "vue" ou "à voir". Une faute de frappe passe inaperçue.
-
-type StatutFilm = "vu" | "a_voir" | "abandonne";
-
-export type FilmAvecStatut = {
-  titre: string;
-  statut: StatutFilm;
-};
-
-
-
-// export function StatutDuFilm(s: StatutFilm) { //ps de type de retour car return r
-//   if(s === "vu"){
-//     console.log("Vous avez déjà visionner ce film!");
-//   }else if (s === "a_voir"){
-//     console.log("il est dans la liste!");
-//   }else{
-//     console.log("vous avez abandonné le visionnage");
-//   }
-// }
-
-
-
-// export function estVu(film: FilmAvecStatut): boolean {
-//   return film.statut === "vu";
-// }
-
-export function libelleStatut(film: FilmAvecStatut): string {
-  if (film.statut === "vu") return "Déjà vu";
-  if (film.statut === "a_voir") return "À voir";
-  if (film.statut === "abandonne") return "Abandonné";
-  return "Statut inconnu";
-}
-
-// --- 7. Une valeur venue de l'extérieur --------------------------------
-// localStorage.getItem renvoie null quand la clé n'existe pas.
-
-export function chargerFavoris(): number[] | null {
-  const brut = localStorage.getItem("favoris");
-  if (brut === null) return null;
-  return JSON.parse(brut);
-}
-
-export function enregistrerFavoris(favoris: number[]) {
-  localStorage.setItem("favoris", JSON.stringify(favoris));
-}
-
-// --- 8. Une mise à jour partielle --------------------------------------
-// On veut pouvoir modifier un ou plusieurs champs d'un film, sans avoir
-// à tous les repasser. Quel type décrit « quelques champs de Film » ?
-
-export function mettreAJour(film : film, modifications: Partial<film>): film {
-  return { ...film, ...modifications };
-}
-
-// --- 9. Une création sans identifiant ----------------------------------
-// À la création, l'id n'existe pas encore : c'est le serveur qui le
-// fournira. Quel type décrit « un Film sans son id » ?
-
-let prochainId = 100;
-
-export function creer(nouveauFilm: Omit<film, "id">): film {
-  return { id: prochainId++, ...nouveauFilm };
-}
-
-// --- 10. Une mutation silencieuse --------------------------------------
-// Cette fonction modifie l'objet reçu au lieu d'en renvoyer un nouveau.
-// Le typage ne l'interdira pas — mais `readonly` peut aider.
-
-export function ajouterNote(film : Readonly<film>, nouvelleNote : number): film {
-  return { ...film, note: (film.note + nouvelleNote) / 2 };
+  return liste.filter((film) => film.genres.includes(genre));
 }
