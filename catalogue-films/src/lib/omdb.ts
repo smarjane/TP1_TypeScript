@@ -13,6 +13,13 @@ export interface ReponseRecherche {
   Error?: string;
 }
 
+export function construireUrlRecherche(terme: string): string {
+  const cleApi = import.meta.env.VITE_OMDB_KEY;
+  const termeEncode = encodeURIComponent(terme);
+
+  return `https://www.omdbapi.com/?apikey=${cleApi}&s=${termeEncode}`;
+}
+
 export function creerExempleRecherche(): ReponseRecherche {
   return {
     Response: "True",
