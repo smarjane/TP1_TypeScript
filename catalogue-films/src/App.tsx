@@ -4,6 +4,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
 import {type FilmAvecStatut} from './lib/utils.ts'//R acco car ps export edfault mais nommé
+import { Routes, Route } from "react-router-dom";
+
 
 export function FILMStatut({titre, statut} : FilmAvecStatut ){
   return (
@@ -139,6 +141,15 @@ function App() {
 
       <div className="ticks"></div>
       <section id="spacer"></section>
+    <Routes>
+  <Route path="/" element={<Layout />}>
+    <Route index element={<Accueil />} />
+    <Route path="recherche" element={<Recherche />} />
+    <Route path="films/:id" element={<DetailFilm />} />
+    <Route path="connexion" element={<Connexion />} />
+    <Route path="*" element={<PageIntrouvable />} />
+  </Route>
+</Routes>
     </>
   )
 }

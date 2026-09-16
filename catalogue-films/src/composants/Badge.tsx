@@ -3,7 +3,6 @@
 export type TonBadge = "neutre" | "succes" | "info" | "attention";
 
 export interface BadgeProps {
-  //texte: string;
   children: React.ReactNode;
   ton?: TonBadge;
 }
