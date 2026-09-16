@@ -1,8 +1,8 @@
 export type StatutFilm = "vu" | "a_voir" | "abandonne";
-export type GenreFilm = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure";
+export type GenreFilm = "SF" | "Horreur" | "Thriller" | "Drame" | "Aventure" | "Comedie";
 
 export interface Film {
-  id: number;
+  readonly id: number;
   titre: string;
   annee: number;
   genres: GenreFilm[];
@@ -18,7 +18,7 @@ export const FILMS: Film[] = [
   { id: 5, titre: "Solaris", annee: 1972, genres: ["SF", "Drame"], note: 8.4, statut: "abandonne" },
 ];
 
-export function trierPar(liste: Film[], cle: keyof Film): Film[] {
+export function trierPar<T>(liste: T[], cle: keyof T): T[] {
   return [...liste].sort((a, b) => {
     const valeurA = a[cle];
     const valeurB = b[cle];
@@ -35,4 +35,44 @@ export function filtrerParGenre(liste: Film[], genre?: GenreFilm): Film[] {
   }
 
   return liste.filter((film) => film.genres.includes(genre));
+}
+
+export function libelleStatut(film: Film): string {
+  switch (film.statut) {
+    case "vu":
+      return "Déjà vu";
+    case "a_voir":
+      return "À voir";
+    case "abandonne":
+      return "Abandonné";
+  }
+}
+
+export function trouverFilm(liste: Film[], id: number): Film | undefined {
+  return liste.find((film) => film.id === id);
+}
+
+export function noteOuTitre(film: Film, afficherNote: boolean): string | number {
+  return afficherNote ? film.note : film.titre;
+}
+
+export function lireIdsSauvegardes(): number[] {
+  const brut = localStorage.getItem("films-selectionnes");
+  if (brut === null) {
+    return [];
+  }
+
+  return JSON.parse(brut) as number[];
+}
+
+export function mettreAJourFilm(film: Film, changements: Partial<Omit<Film, "id">>): Film {
+  return { ...film, ...changements };
+}
+
+export function creerFilm(donnees: Omit<Film, "id">, id: number): Film {
+  return { id, ...donnees };
+}
+
+export function remplacerFilm(film: Readonly<Film>, changements: Partial<Omit<Film, "id">>): Film {
+  return { ...film, ...changements };
 }

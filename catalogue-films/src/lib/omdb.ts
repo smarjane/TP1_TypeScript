@@ -60,14 +60,14 @@ export interface FilmOmdb {
   imdbID: string;
   Title: string;
   Year: string;
-  Type: string;      // "movie" | "series" | "game" — l'API n'est pas plus précise
-  Poster: string;    // une URL, ou la chaîne "N/A"
+  Type: string;  
+  Poster: string; 
 }
 
 export interface ReponseRecherche {
   Search?: FilmOmdb[];
   totalResults?: string;
-  Response: "True" | "False";   // OMDB répond 200 même quand ça échoue
+  Response: "True" | "False";
   Error?: string;
 }
 
@@ -76,12 +76,12 @@ export interface ReponseRecherche {
 // D'où un second type, qui étend le premier.
 export interface FilmDetailOmdb extends FilmOmdb {
   Rated: string;
-  Runtime: string;      // "142 min", ou "N/A"
-  Genre: string;        // "Drama, Crime" — une chaîne, pas un tableau
+  Runtime: string;
+  Genre: string;
   Director: string;
   Actors: string;
   Plot: string;
-  imdbRating: string;   // "9.3", ou "N/A" — un string, toujours
+  imdbRating: string;
   Response: "True" | "False";
   Error?: string;
 }
@@ -105,4 +105,3 @@ export function urlDetail(id: string): string {
 export function afficheDisponible(poster: string): boolean {
   return poster !== "N/A" && poster.startsWith("http");
 }
-
