@@ -1,52 +1,4 @@
-/*import type path from "path";
-import {useEffect, useState} from "react";
-
-export interface FilmOmdb { 
-  imdbID: string;
-  Title: string;
-  Year: string;
-  Type: string;      // "movie" | "series" | "game" — l'API n'est pas plus précise
-  Poster: string;    // une URL, ou la chaîne "N/A"
-}
-
-export default interface ReponseRecherche {
-  Search?: FilmOmdb[];       // absent quand la recherche échoue
-  totalResults?: string;
-  Response: "True" | "False";
-  Error?: string;
-}
-
-
-    const uri = "https://www.omdbapi.com/?apikey=389fe095&s=batman"
-    const encodedParam = encodeURIComponent(uri)
-    const [films, setFilms] = useState<FilmOmdb[]>([]);
-    const [chargement, setChargement] = useState(false);
-    const [erreur, setErreur] = useState<string | null>(null);
-    
-    useEffect(()=>{
-        setChargement(true);
-        setErreur(null)
-        fetch(uri)
-        .then((r) => {
-            if(!r.ok) throw new Error("Erreur inconnu" + r.status);
-            return r.json()
-        })
-        .then((d) => setFilms(d.Search))
-        .catch((e) => setErreur(e.message))
-        .finally(() => setChargement(false))
-    }, []);
-    
-
-    if (!films) return <p>"Tapez un titre pour lancer la recherche"</p>;
-    if (chargement) return <p>"Chargement..."</p>;
-    if (erreur) return <p>{erreur}</p>;
-    if (erreur) return <p>{erreur}</p>;*/
-
-
-
-
-    
-    // src/lib/omdb.ts
+// src/lib/omdb.ts
 //
 // La version du TP4, augmentée de ce qu'il faut pour la page de détail.
 // Tout ce qui décrit l'API OMDB est ici : les types des réponses et la
@@ -105,4 +57,3 @@ export function urlDetail(id: string): string {
 export function afficheDisponible(poster: string): boolean {
   return poster !== "N/A" && poster.startsWith("http");
 }
-
