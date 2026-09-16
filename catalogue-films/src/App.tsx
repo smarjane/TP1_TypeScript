@@ -1,57 +1,47 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useDebounce, useFetch } from "./hooks/useFetch";
 import { construireUrlRecherche, type FilmOmdb, type ReponseRecherche } from "./lib/omdb";
 
 function App() {
   const [terme, setTerme] = useState("");
-  const [films, setFilms] = useState<FilmOmdb[]>([]);
-  const [chargement, setChargement] = useState(false);
-  const [erreur, setErreur] = useState<string | null>(null);
+  const termeDiffere = useDebounce(terme);
+  const url = termeDiffere.trim() ? construireUrlRecherche(termeDiffere) : null;
+  const { donnees, chargement, erreur } = useFetch<ReponseRecherche>(url);
+  const films: FilmOmdb[] =
+    donnees?.Response === "True" ? donnees.Search ?? [] : [];
+  const erreurRecherche =
+    donnees?.Response === "False"
+      ? donnees.Error ?? "La recherche a échoué."
+      : erreur;
 
-  useEffect(() => {
-    if (!terme.trim()) {
-      return;
+  const afficherEtatRecherche = () => {
+    if (!termeDiffere.trim()) {
+      return <p>Tapez un titre pour lancer la recherche.</p>;
     }
 
-    const controleur = new AbortController();
+    if (chargement) {
+      return <p>Chargement…</p>;
+    }
 
-    const rechercherFilms = async () => {
-      setChargement(true);
-      setErreur(null);
+    if (erreurRecherche) {
+      return <p className="text-red-600">{erreurRecherche}</p>;
+    }
 
-      try {
-        const reponse = await fetch(construireUrlRecherche(terme), {
-          signal: controleur.signal,
-        });
+    if (films.length === 0) {
+      return <p>Aucun film ne correspond à « {termeDiffere} ».</p>;
+    }
 
-        if (!reponse.ok) {
-          throw new Error(`Erreur HTTP ${reponse.status}`);
-        }
-
-        const donnees: ReponseRecherche = await reponse.json();
-
-        if (donnees.Response === "False") {
-          throw new Error(donnees.Error ?? "La recherche a échoué.");
-        }
-
-        setFilms(donnees.Search ?? []);
-      } catch (e: unknown) {
-        if (e instanceof DOMException && e.name === "AbortError") {
-          return;
-        }
-
-        setErreur(e instanceof Error ? e.message : "Erreur inconnue");
-        setFilms([]);
-      } finally {
-        if (!controleur.signal.aborted) {
-          setChargement(false);
-        }
-      }
-    };
-
-    rechercherFilms();
-
-    return () => controleur.abort();
-  }, [terme]);
+    return (
+      <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {films.map((film) => (
+          <li key={film.imdbID} className="rounded-lg bg-white p-4 shadow-sm">
+            <h2 className="font-bold">{film.Title}</h2>
+            <p className="text-sm text-slate-500">{film.Year}</p>
+          </li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <main className="min-h-screen bg-slate-100 p-6 text-slate-800">
@@ -66,24 +56,7 @@ function App() {
           aria-label="Titre du film à rechercher"
         />
 
-        {!terme.trim() ? (
-          <p>Tapez un titre pour lancer la recherche.</p>
-        ) : chargement ? (
-          <p>Chargement...</p>
-        ) : erreur ? (
-          <p className="text-red-600">{erreur}</p>
-        ) : films.length === 0 ? (
-          <p>Aucun film ne correspond à « {terme} ».</p>
-        ) : (
-          <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {films.map((film) => (
-              <li key={film.imdbID} className="rounded-lg bg-white p-4 shadow-sm">
-                <h2 className="font-bold">{film.Title}</h2>
-                <p className="text-sm text-slate-500">{film.Year}</p>
-              </li>
-            ))}
-          </ul>
-        )}
+        {afficherEtatRecherche()}
       </div>
     </main>
   );
