@@ -2,6 +2,7 @@ import type { Film, StatutFilm } from "../lib/utils";
 import Badge, { type TonBadge } from "./Badge";
 import Bouton from "./Bouton";
 import Carte from "./Carte";
+import { Link } from "react-router-dom";
 
 export interface ListeFilmsProps {
   films: Film[];
@@ -29,8 +30,10 @@ export default function ListeFilms({ films, messageVide, onSelection }: ListeFil
       {films.map((film) => {
         const statut = correspondanceStatut[film.statut];
 
-        return (
+        
+        return ( //partie aider par IA
           <li key={film.id} className="list-none">
+            <Link to={`/films/${film.imdbID}`}>
             <Carte
               titre={film.titre}
               sousTitre={`${film.annee} — ${film.note}/10`}
@@ -47,6 +50,7 @@ export default function ListeFilms({ films, messageVide, onSelection }: ListeFil
                 ))}
               </div>
             </Carte>
+            </Link>
           </li>
         );
       })}
