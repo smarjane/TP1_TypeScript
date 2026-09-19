@@ -25,19 +25,19 @@ export default function Accueil() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-100 p-6 text-slate-800">
+    <main className="min-h-screen bg-slate-100 p-6 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
       <div className="mx-auto max-w-6xl space-y-10">
         <header>
-          <h1 className="text-3xl font-bold text-slate-900">Catalogue de films</h1>
-          <p className="mt-2 text-slate-600">Un catalogue typé et une recherche OMDB.</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Catalogue de films</h1>
+          <p className="mt-2 text-slate-600 dark:text-slate-300">Un catalogue typé et une recherche OMDB.</p>
         </header>
 
         <section className="space-y-4">
-          <h2 className="text-2xl font-bold text-slate-900">Catalogue local</h2>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Catalogue local</h2>
           <ListeFilms films={trierPar(FILMS, "titre")} />
-          <h3 className="text-xl font-semibold text-slate-900">Films de science-fiction</h3>
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Films de science-fiction</h3>
           <ListeFilms films={filtrerParGenre(FILMS, "SF")} />
-          <h3 className="text-xl font-semibold text-slate-900">Genre inexistant</h3>
+          <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Genre inexistant</h3>
           <ListeFilms films={filtrerParGenre(FILMS, "Comedie")} messageVide="Aucun film pour ce genre." />
         </section>
 

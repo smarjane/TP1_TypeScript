@@ -1,3 +1,5 @@
+import RechercheFilms from "../composants/RechercheFilms";
+
 export default function Recherche() {
-  return <h2>Page Recherche</h2>;
+  return <RechercheFilms />;
 }

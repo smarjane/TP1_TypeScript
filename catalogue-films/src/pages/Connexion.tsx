@@ -1,16 +1,24 @@
 import { useState } from "react";
-import { useAuth } from "../contextes/AuthContext";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../contextes/useAuth";
 import Bouton from "../composants/Bouton";
 
 export default function Connexion() {
   const [pseudo, setPseudo] = useState("");
   const { connecter } = useAuth();
+  const navigate = useNavigate();
+  const emplacement = useLocation();
 
   function valider(e: React.FormEvent) {
     e.preventDefault();
-    if (pseudo.trim() !== "") {
-      connecter(pseudo);
+    const pseudoValide = pseudo.trim();
+    if (pseudoValide === "") {
+      return;
     }
+
+    connecter(pseudoValide);
+    const destination = (emplacement.state as { de?: { pathname: string } } | null)?.de?.pathname ?? "/";
+    navigate(destination, { replace: true });
   }
 
   return (
@@ -25,7 +33,7 @@ export default function Connexion() {
         className="border p-2 w-full rounded"
       />
 
-      <Bouton type="submit" libelle="Se connecter"/>
+      <Bouton type="submit" libelle="Se connecter" />
     </form>
   );
 }

@@ -1,18 +1,22 @@
-import { createContext, useContext, useState } from "react";
-
-interface AuthContexte {
-  pseudo: string | null;
-  connecter: (pseudo: string) => void;
-  deconnecter: () => void;
-}
-
-const Contexte = createContext<AuthContexte | undefined>(undefined);
+import { useEffect, useState } from "react";
+import { ContexteAuth } from "./AuthContextValue";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [pseudo, setPseudo] = useState<string | null>(null);
+  const [pseudo, setPseudo] = useState<string | null>(() => {
+    const valeur = localStorage.getItem("pseudo-catalogue");
+    return valeur ?? null;
+  });
 
-  function connecter(pseudo: string) {
-    setPseudo(pseudo);
+  useEffect(() => {
+    if (pseudo) {
+      localStorage.setItem("pseudo-catalogue", pseudo);
+      return;
+    }
+    localStorage.removeItem("pseudo-catalogue");
+  }, [pseudo]);
+
+  function connecter(nouveauPseudo: string) {
+    setPseudo(nouveauPseudo.trim());
   }
 
   function deconnecter() {
@@ -20,16 +24,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <Contexte.Provider value={{ pseudo, connecter, deconnecter }}>
+    <ContexteAuth.Provider value={{ pseudo, connecter, deconnecter }}>
       {children}
-    </Contexte.Provider>
+    </ContexteAuth.Provider>
   );
-}
-
-export function useAuth(): AuthContexte {
-  const contexte = useContext(Contexte);
-  if (contexte === undefined) {
-    throw new Error("useAuth doit être utilisé dans un <AuthProvider>");
-  }
-  return contexte;
 }

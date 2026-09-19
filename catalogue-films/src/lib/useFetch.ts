@@ -20,8 +20,6 @@ export function useFetch<T>(url: string | null): EtatFetch<T> {
 
   useEffect(() => {
     if (!url) {
-      setDonnees(null);
-      setErreur(null);
       return;
     }
 

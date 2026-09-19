@@ -1,3 +1,3 @@
 export default function PageIntrouvable() {
-  return <h2>Page introuvable</h2>;
+  return <h2>Cette page n'existe pas.</h2>;
 }

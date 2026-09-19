@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useFetch } from "../hooks/useFetch";
 import { urlRecherche, type ReponseRecherche } from "../lib/omdb";
 import { CarteFilm } from "./CarteFilm";
@@ -17,7 +18,7 @@ export default function RechercheFilms() {
         value={terme}
         onChange={(e) => setTerme(e.target.value)}
         placeholder="Exemple : Batman"
-        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 outline-none focus:ring-2 focus:ring-blue-300"
+        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-500 outline-none focus:ring-2 focus:ring-blue-300"
       />
 
       {!terme.trim() ? (
@@ -36,7 +37,9 @@ export default function RechercheFilms() {
         <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {films.map((film) => (
             <li key={film.imdbID}>
-              <CarteFilm film={film} />
+              <Link to={`/films/${film.imdbID}`}>
+                <CarteFilm film={film} />
+              </Link>
             </li>
           ))}
         </ul>
